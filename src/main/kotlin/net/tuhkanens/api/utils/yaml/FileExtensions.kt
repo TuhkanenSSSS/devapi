@@ -1,12 +1,12 @@
 package net.tuhkanens.api.utils.yaml
 
-import net.tuhkanens.api.managers.API
+import net.tuhkanens.api.managers.DevAPI
 import org.bukkit.plugin.java.JavaPlugin
 import java.io.File
 
 object FileExtensions {
 
-    private val plugin: JavaPlugin by lazy { API.getPlugin() }
+    private val plugin: JavaPlugin by lazy { DevAPI.getPlugin() }
 
     fun createDataFolder() {
         if (!plugin.dataFolder.exists()) {

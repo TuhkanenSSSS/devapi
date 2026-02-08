@@ -3,6 +3,8 @@ package net.tuhkanens.api.utils.yaml
 object FilesManager {
 
     private val files: MutableMap<String, FileData> = mutableMapOf()
+    private val readers: MutableMap<String, FileReader> = mutableMapOf()
+    private val writers: MutableMap<String, FileWriter> = mutableMapOf()
 
     fun newFiles(vararg filesData: FileData) {
 
@@ -10,23 +12,41 @@ object FilesManager {
 
         for (fileData in filesData) {
             factory.newFile(fileData)
+
             files[fileData.fileName] = fileData
+            readers[fileData.fileName] = FileReader(fileData)
+            writers[fileData.fileName] = FileWriter(fileData)
         }
 
     }
 
     fun getFileReader(fileName: String): FileReader {
-        val fileData = files[fileName]
+        return readers[fileName]
             ?: throw IllegalArgumentException("File '$fileName' not found for FileReader!")
-
-        return FileReader(fileData)
     }
 
     fun getFileWriter(fileName: String): FileWriter {
-        val fileData = files[fileName]
+        return writers[fileName]
             ?: throw IllegalArgumentException("File '$fileName' not found for FileWriter!")
+    }
 
-        return FileWriter(fileData)
+    fun reloadFile(fileName: String) {
+        readers[fileName]?.reload()
+            ?: throw IllegalArgumentException("File '$fileName' not found!")
+        writers[fileName]?.reload()
+    }
+
+    fun reloadAll() {
+        readers.values.forEach { it.reload() }
+        writers.values.forEach { it.reload() }
+    }
+
+    fun hasFile(fileName: String): Boolean {
+        return files.contains(fileName)
+    }
+
+    fun getFileNames(): Set<String> {
+        return files.keys.toSet()
     }
 
 }

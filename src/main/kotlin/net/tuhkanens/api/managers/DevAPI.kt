@@ -3,7 +3,7 @@ package net.tuhkanens.api.managers
 import net.tuhkanens.api.utils.yaml.FileExtensions
 import org.bukkit.plugin.java.JavaPlugin
 
-object API {
+object DevAPI {
 
     private var instance: JavaPlugin? = null
 
