@@ -8,11 +8,10 @@ class FileFactory {
 
     private val plugin: JavaPlugin by lazy { DevAPI.getPlugin() }
 
-    fun newFile(fileData: FileData) {
+    fun newFile(path: String, fileName: String) {
 
-        val fullFileName = "${fileData.fileName}.yml"
-
-        val folder: File = FileExtensions.getFolder(plugin.dataFolder, fileData.path)
+        val fullFileName = "$fileName.yml"
+        val folder: File = FileExtensions.getFolder(plugin.dataFolder, path)
 
         if (!folder.exists()) {
             folder.mkdirs()
@@ -21,8 +20,24 @@ class FileFactory {
         val file = File(folder, fullFileName)
 
         if (!file.exists()) {
-            val resourcePath = if (fileData.path.isEmpty()) fullFileName else "${fileData.fileName}/$fullFileName"
-            plugin.saveResource(resourcePath, false)
+            val resourcePath = if (path.isEmpty()) fullFileName else "$fileName/$fullFileName"
+            try {
+                plugin.saveResource(resourcePath, false)
+            } catch (e: Exception) {
+                file.createNewFile()
+            }
+        }
+
+    }
+
+    fun newFile(fileData: FileData) {
+        this.newFile(fileData.path, fileData.fileName)
+        FilesManager.register(fileData)
+    }
+
+    fun newFiles(vararg filesData: FileData) {
+        for (fileData in filesData) {
+            this.newFile(fileData)
         }
 
     }

@@ -6,18 +6,21 @@ object FilesManager {
     private val readers: MutableMap<String, FileReader> = mutableMapOf()
     private val writers: MutableMap<String, FileWriter> = mutableMapOf()
 
-    fun newFiles(vararg filesData: FileData) {
+    /**
+     * @see FileFactory.newFile
+     * @see FileFactory.newFiles
+     */
+    fun register(fileData: FileData) {
+        files[fileData.fileName] = fileData
+        readers[fileData.fileName] = FileReader(fileData)
+        writers[fileData.fileName] = FileWriter(fileData)
+    }
 
-        val factory = FileFactory()
-
-        for (fileData in filesData) {
-            factory.newFile(fileData)
-
-            files[fileData.fileName] = fileData
-            readers[fileData.fileName] = FileReader(fileData)
-            writers[fileData.fileName] = FileWriter(fileData)
-        }
-
+    operator fun get(fileName: String): FileAccess {
+        return FileAccess(
+            reader = getFileReader(fileName),
+            writer = getFileWriter(fileName)
+        )
     }
 
     fun getFileReader(fileName: String): FileReader {
