@@ -7,7 +7,7 @@ object API {
 
     private var instance: JavaPlugin? = null
 
-    internal fun setAPI(plugin: JavaPlugin) {
+    fun setAPI(plugin: JavaPlugin) {
 
         if (this.instance != null) {
             throw IllegalStateException("API already initialized!")
