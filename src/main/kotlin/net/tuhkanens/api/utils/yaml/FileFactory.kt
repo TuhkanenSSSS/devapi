@@ -1,15 +1,18 @@
 package net.tuhkanens.api.utils.yaml
 
-import net.tuhkanens.api.managers.PluginManager
+import net.tuhkanens.api.managers.API
+import org.bukkit.plugin.java.JavaPlugin
 import java.io.File
 
 class FileFactory {
 
-    fun newFile(path: String, fileName: String) {
+    private val plugin: JavaPlugin by lazy { API.getPlugin() }
 
-        val fullFileName = "$fileName.yml"
+    fun newFile(fileData: FileData) {
 
-        val folder: File = FileExtensions.getFolder(PluginManager.javaPlugin.dataFolder, path)
+        val fullFileName = "${fileData.fileName}.yml"
+
+        val folder: File = FileExtensions.getFolder(plugin.dataFolder, fileData.path)
 
         if (!folder.exists()) {
             folder.mkdirs()
@@ -18,8 +21,8 @@ class FileFactory {
         val file = File(folder, fullFileName)
 
         if (!file.exists()) {
-            val resourcePath = if (path.isEmpty()) fullFileName else "$path/$fullFileName"
-            PluginManager.javaPlugin.saveResource(resourcePath, false)
+            val resourcePath = if (fileData.path.isEmpty()) fullFileName else "${fileData.fileName}/$fullFileName"
+            plugin.saveResource(resourcePath, false)
         }
 
     }

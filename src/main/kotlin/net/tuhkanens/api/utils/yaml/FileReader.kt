@@ -8,13 +8,12 @@ import org.bukkit.configuration.file.YamlConfiguration
 import java.io.File
 
 class FileReader(
-    path: String,
-    fileName: String
+    fileData: FileData
 ) {
 
     private val miniMessage: MiniMessage = MiniMessage.miniMessage()
 
-    private val file: File = FileExtensions.getFile(path, fileName)
+    private val file: File = FileExtensions.getFile(fileData.path, fileData.fileName)
     private var yaml: YamlConfiguration = YamlConfiguration.loadConfiguration(file)
 
     fun reload() {
